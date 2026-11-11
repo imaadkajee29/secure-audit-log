@@ -1,0 +1,8 @@
+title = "secure-audit-log gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Documented placeholders, not real secrets"
+paths = ['''\.env\.example$''']

@@ -1,0 +1,26 @@
+# Local run with production-like hardening.
+#   cp .env.example .env   # then set real secrets
+#   docker compose up --build
+services:
+  api:
+    build: .
+    image: secure-audit-log:local
+    ports:
+      - '3000:3000'
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      DB_PATH: /data/audit.db
+    volumes:
+      - audit-data:/data
+    read_only: true # immutable root filesystem
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL # no Linux capabilities needed
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+
+volumes:
+  audit-data:
