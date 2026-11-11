@@ -19,7 +19,7 @@ COPY tsconfig.json tsconfig.build.json ./
 COPY src ./src
 RUN npm run build && mkdir -p /data
 
-FROM gcr.io/distroless/nodejs${NODE_VERSION}-debian12:nonroot AS runtime
+FROM gcr.io/distroless/nodejs${NODE_VERSION}-debian13:nonroot AS runtime
 LABEL org.opencontainers.image.title="secure-audit-log" \
       org.opencontainers.image.description="Tamper-evident audit logging API" \
       org.opencontainers.image.source="https://github.com/imaadkajee29/secure-audit-log" \
