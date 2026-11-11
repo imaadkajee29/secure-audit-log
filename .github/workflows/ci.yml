@@ -97,7 +97,7 @@ jobs:
           exit 1
 
       - name: Scan image for vulnerabilities (fail on HIGH/CRITICAL)
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: secure-audit-log:ci
           severity: HIGH,CRITICAL
@@ -107,7 +107,7 @@ jobs:
 
       - name: Scan image (SARIF for the Security tab)
         if: always()
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: secure-audit-log:ci
           format: sarif
