@@ -199,4 +199,4 @@ This is project 1 of 3 in a connected DevSecOps portfolio:
 ## Author
 
 **Imaad Kajee**, Software Engineer · BCIS Honours (IIE Varsity College)
-[LinkedIn](https://www.linkedin.com/in/imaad-kajee-aa557026a/)
+[LinkedIn](https://www.linkedin.com/in/imaadkajee/)
