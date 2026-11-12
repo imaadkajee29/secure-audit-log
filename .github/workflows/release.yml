@@ -71,21 +71,33 @@ jobs:
           format: spdx-json
           output-file: sbom.spdx.json
 
-      - name: Create GitHub release
+      - name: Create or update GitHub release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ github.ref_name }}
           DIGEST: ${{ steps.build.outputs.digest }}
         run: |
-          gh release create "$TAG" sbom.spdx.json \
-            --repo "$GITHUB_REPOSITORY" \
-            --title "$TAG" \
-            --generate-notes \
-            --notes "Image: \`${IMAGE}@${DIGEST}\`
+          cat > notes.md <<NOTES
+          ## Container image
+
+          \`${IMAGE}@${DIGEST}\`
 
           Verify the signature:
-          \`\`\`
+
+          \`\`\`bash
           cosign verify ${IMAGE}@${DIGEST} \\
             --certificate-identity-regexp 'https://github.com/${GITHUB_REPOSITORY}/.github/workflows/release.yml@.*' \\
             --certificate-oidc-issuer https://token.actions.githubusercontent.com
-          \`\`\`"
+          \`\`\`
+          NOTES
+
+          # Works whether the release was created in the GitHub UI or only a tag was pushed.
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload "$TAG" sbom.spdx.json --clobber --repo "$GITHUB_REPOSITORY"
+            existing=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json body --jq .body)
+            printf '%s\n\n%s\n' "$existing" "$(cat notes.md)" > combined.md
+            gh release edit "$TAG" --notes-file combined.md --repo "$GITHUB_REPOSITORY"
+          else
+            gh release create "$TAG" sbom.spdx.json --repo "$GITHUB_REPOSITORY" \
+              --title "$TAG" --generate-notes --notes-file notes.md
+          fi
