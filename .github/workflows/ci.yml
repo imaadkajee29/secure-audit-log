@@ -112,6 +112,10 @@ jobs:
           image-ref: secure-audit-log:ci
           format: sarif
           output: trivy-image.sarif
+          # Only actionable findings reach the Security tab: fixable HIGH/CRITICAL.
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          limit-severities-for-sarif: true
           exit-code: '0'
 
       - uses: github/codeql-action/upload-sarif@v4

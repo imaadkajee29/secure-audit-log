@@ -9,6 +9,10 @@ updates:
         dependency-type: production
       development:
         dependency-type: development
+    ignore:
+      # Type definitions must track the Node 22 runtime, not the latest Node major.
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
     open-pull-requests-limit: 5
 
   - package-ecosystem: github-actions
